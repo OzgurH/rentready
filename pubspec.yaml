@@ -1,6 +1,8 @@
 name: rentready
 description: A new Flutter project.
 
+# ms envrionment guid is 693ea973-4658-e1fb-b773-e8ee7de7bf54
+# https://make.powerapps.com/environments/693ea973-4658-e1fb-b773-e8ee7de7bf54/entities/693ea973-4658-e1fb-b773-e8ee7de7bf54/Account#data
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
