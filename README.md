@@ -17,9 +17,12 @@ App requests dataverse 'Accounts' table with the following columns only 'account
 
 ## Limitations & Risks
 
+This assignment has some limitations and risks that need to be taken care of in the real world, as it can be accomplished quickly and the different features of the developer are tested.
+
 * The account holds the dataverse table is a trial and valid for 1 month until September 11th, 2022. 
 * Internet connection status is not checking before api calls.
-* Data paging structure isnt implemented. App get all the data. 
+* Data paging structure isnt implemented. App gets all the data. 
+ 
 
 
 
