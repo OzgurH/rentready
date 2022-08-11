@@ -1,4 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rentready/data/dataverse.dart';
+
+import 'data/globals.dart';
+import 'data/service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +16,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Dataverse',
       theme: ThemeData(
+        scaffoldBackgroundColor: Color.fromARGB(255, 219, 219, 219),
+        primaryColor: Colors.black,
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -48,6 +55,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int viewoption = 0;
+
   int _counter = 0;
 
   void _incrementCounter() {
@@ -63,53 +72,263 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Container(
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            Padding(
+                padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4, // 40%
+                      child: TextField(
+                        onChanged: (value) {},
+                        // controller: editingController,
+                        decoration: const InputDecoration(
+                          prefixIconColor: Colors.black,
+                          hintText: "Search",
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3, // 30%
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(builder:
+                                    (BuildContext context,
+                                        StateSetter mystate) {
+                                  return Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.35,
+                                      color: Colors.white,
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: ElevatedButton(
+                                                    child: const Text('Apply',
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                    onPressed: () {
+                                                      filter = '';
+                                                      Navigator.pop(context);
+                                                      setState(() {});
+                                                    }))
+                                          ],
+                                        ),
+                                      )));
+                                });
+                              }).whenComplete(() {
+                            if (kDebugMode) {
+                              print('filter popup closed');
+                            }
+                            setState(() {});
+                            //Navigator.pop(context);
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.filter_alt,
+                          size: 24.0,
+                        ),
+                        label: const Text('Filter'),
+                        style: ElevatedButton.styleFrom(
+                          onPrimary: Colors.black,
+                          elevation: 1,
+                          primary: Color.fromARGB(0, 0, 0, 0),
+                          shadowColor: Colors.transparent.withOpacity(0),
+                          side: const BorderSide(
+                            width: 0,
+                            color: Colors.transparent,
+                          ),
+                        ), // <-- Text
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3, // 30%
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.view_list,
+                            ),
+                            iconSize: 20,
+                            color: Colors.black,
+                            onPressed: () {
+                              setState(() {
+                                viewoption = 0;
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.view_comfy_alt,
+                            ),
+                            iconSize: 20,
+                            color: Colors.black,
+                            onPressed: () {
+                              setState(() {
+                                viewoption = 1;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )),
+            Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: FutureBuilder<AccountData>(
+                      future: fetchData(),
+                      builder: (context, future) {
+                        if (future.connectionState == ConnectionState.waiting) {
+                          return const SizedBox(
+                              height: 80.0,
+                              child:
+                                  Center(child: CircularProgressIndicator()));
+                        } else {
+                          if (future.hasData) {
+                            AccountData? list = future.data;
+                            return (viewoption == 0)
+                                ? ListView.builder(
+                                    itemCount: list?.value?.length,
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                        color: Colors.white,
+                                        child: Row(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: Image.network(
+                                                  (list!.value![index]
+                                                              .entityimage ==
+                                                          null)
+                                                      ? 'https://via.placeholder.com/150'
+                                                      : list!.value![index]
+                                                          .entityimage
+                                                          .toString(),
+                                                  fit: BoxFit.fitWidth),
+                                            ),
+                                            Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10),
+                                                      child: Text(
+                                                          list!.value![index]
+                                                              .name
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              fontSize: 18.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold))),
+                                                  Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10),
+                                                      child: Text(
+                                                          list!.value![index]
+                                                              .accountnumber
+                                                              .toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      18.0))),
+                                                ])
+                                          ],
+                                        ),
+                                      );
+                                    })
+                                : GridView.builder(
+                                    itemCount: list?.value?.length,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: MediaQuery.of(context)
+                                              .size
+                                              .width /
+                                          (MediaQuery.of(context).size.height /
+                                              1.4),
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                          color: Colors.white,
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child: Image.network(
+                                                      (list!.value![index]
+                                                                  .entityimage ==
+                                                              null)
+                                                          ? 'https://via.placeholder.com/150'
+                                                          : list!.value![index]
+                                                              .entityimage
+                                                              .toString(),
+                                                      fit: BoxFit.fitWidth),
+                                                ),
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: Text(
+                                                        list!.value![index].name
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                            fontSize: 18.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold))),
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: Text(
+                                                        list!.value![index]
+                                                            .accountnumber
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                            fontSize: 18.0))),
+                                              ]));
+                                    });
+
+                            ;
+                          } // Display empty container if the list is empty
+                          else
+                            return Container(
+                              child: Text("No record found."),
+                            );
+                        }
+                      })),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
