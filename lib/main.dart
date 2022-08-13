@@ -59,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void buildFilterParams() {
     filter = ''; // resetting previous filter
+
     if (filter1value != '') {
       filter = '&\$filter=address1_stateorprovince eq \'$filter1value\'';
     }
@@ -256,7 +257,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Row(
                         children: [
                           IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.view_list,
                             ),
                             iconSize: 20,
@@ -268,7 +269,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                           ),
                           IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.view_comfy_alt,
                             ),
                             iconSize: 20,
@@ -316,7 +317,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 .entityimage ==
                                                             null)
                                                         ? 'https://via.placeholder.com/150'
-                                                        : list!.value![index]
+                                                        : list.value![index]
                                                             .entityimage
                                                             .toString(),
                                                     fit: BoxFit.fitWidth),
@@ -332,7 +333,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                             const EdgeInsets
                                                                 .all(10),
                                                         child: Text(
-                                                            list!.value![index]
+                                                            list.value![index]
                                                                 .name
                                                                 .toString(),
                                                             style: const TextStyle(
@@ -350,7 +351,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                   .spaceBetween,
                                                           children: [
                                                             Text(
-                                                                list!
+                                                                list
                                                                     .value![
                                                                         index]
                                                                     .accountnumber
@@ -358,7 +359,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 style: const TextStyle(
                                                                     fontSize:
                                                                         18.0)),
-                                                            Text(' '),
+                                                            const Text(' / '),
                                                             Text(
                                                                 list!
                                                                     .value![
@@ -405,8 +406,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                     .entityimage ==
                                                                 null)
                                                             ? 'https://via.placeholder.com/150'
-                                                            : list!
-                                                                .value![index]
+                                                            : list.value![index]
                                                                 .entityimage
                                                                 .toString(),
                                                         fit: BoxFit.fitWidth),
@@ -416,7 +416,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           const EdgeInsets.all(
                                                               10),
                                                       child: Text(
-                                                          list!.value![index]
+                                                          list.value![index]
                                                               .name
                                                               .toString(),
                                                           style: const TextStyle(
@@ -429,7 +429,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           const EdgeInsets.all(
                                                               10),
                                                       child: Text(
-                                                          list!.value![index]
+                                                          list.value![index]
                                                               .accountnumber
                                                               .toString(),
                                                           style:
@@ -445,13 +445,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: Text("No record found."),
                               );
                             }
-                            ;
                           } // Display message if the list is empty
-                          else
-                            return Padding(
+                          else {
+                            return const Padding(
                               padding: EdgeInsets.all(40),
                               child: Text("No record found."),
                             );
+                          }
                         }
                       })),
             ),
