@@ -57,17 +57,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int viewoption = 0;
 
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void buildFilterParams() {
+    filter = ''; // resetting previous filter
+    if (filter1value != '') {
+      filter = '&\$filter=address1_stateorprovince eq \'$filter1value\'';
+    }
+    if (filter2value != '') {
+      filter = '&\$filter=statecode eq $filter2value';
+    }
+    if (filter1value != '' && filter2value != '') {
+      filter =
+          '&\$filter=(address1_stateorprovince eq \'$filter1value\' and  statecode eq $filter2value)';
+    }
   }
 
   @override
@@ -84,7 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       flex: 4, // 40%
                       child: TextField(
                         onChanged: (value) {},
-                        // controller: editingController,
+                        onSubmitted: (value) {
+                          setState(() {
+                            searchtext = value;
+                          });
+                        },
+                        textInputAction: TextInputAction.search,
                         decoration: const InputDecoration(
                           prefixIconColor: Colors.black,
                           hintText: "Search",
@@ -115,18 +121,107 @@ class _MyHomePageState extends State<MyHomePage> {
                                               MainAxisAlignment.center,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
+                                            Text('State or Province'),
+                                            DropdownButton(
+                                              // Initial Value
+                                              value: filter1value,
+                                              // Down Arrow Icon
+                                              icon: const Icon(
+                                                  Icons.keyboard_arrow_down),
+                                              // Array list of items
+                                              items: filter1items
+                                                  .map((String items) {
+                                                return DropdownMenuItem(
+                                                  value: items,
+                                                  child: Text(items),
+                                                );
+                                              }).toList(),
+                                              // After selecting the desired option,it will
+                                              // change button value to selected value
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  filter1value = newValue!;
+                                                  buildFilterParams();
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                            ),
+                                            Text('State Code'),
+                                            DropdownButton(
+                                              // Initial Value
+                                              value: filter2value,
+                                              // Down Arrow Icon
+                                              icon: const Icon(
+                                                  Icons.keyboard_arrow_down),
+                                              // Array list of items
+                                              items: filter2items
+                                                  .map((String items) {
+                                                return DropdownMenuItem(
+                                                  value: items,
+                                                  child: Text(items),
+                                                );
+                                              }).toList(),
+                                              // After selecting the desired option,it will
+                                              // change button value to selected value
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  filter2value = newValue!;
+                                                  buildFilterParams();
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                            ),
                                             Padding(
                                                 padding:
                                                     const EdgeInsets.all(10),
-                                                child: ElevatedButton(
-                                                    child: const Text('Apply',
-                                                        style: TextStyle(
-                                                            fontSize: 20)),
-                                                    onPressed: () {
-                                                      filter = '';
-                                                      Navigator.pop(context);
-                                                      setState(() {});
-                                                    }))
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          onPrimary:
+                                                              Colors.white,
+                                                          elevation: 1,
+                                                          primary:
+                                                              Color.fromARGB(
+                                                                  0,
+                                                                  255,
+                                                                  255,
+                                                                  255),
+                                                          side:
+                                                              const BorderSide(
+                                                            width: 0,
+                                                            color: Colors
+                                                                .transparent,
+                                                          ),
+                                                        ), //
+                                                        child: const Text(
+                                                            'Clear Filters',
+                                                            style: TextStyle(
+                                                                fontSize: 20)),
+                                                        onPressed: () {
+                                                          filter = '';
+                                                          filter1value = '';
+                                                          filter2value = '';
+                                                          Navigator.pop(
+                                                              context);
+                                                          setState(() {});
+                                                        }),
+                                                    // ElevatedButton(
+                                                    //     child: const Text(
+                                                    //         'Apply',
+                                                    //         style: TextStyle(
+                                                    //             fontSize: 20)),
+                                                    //     onPressed: () {
+                                                    //       Navigator.pop(
+                                                    //           context);
+                                                    //       setState(() {});
+                                                    //     })
+                                                  ],
+                                                ))
                                           ],
                                         ),
                                       )));
@@ -203,32 +298,119 @@ class _MyHomePageState extends State<MyHomePage> {
                         } else {
                           if (future.hasData) {
                             AccountData? list = future.data;
-                            return (viewoption == 0)
-                                ? ListView.builder(
-                                    itemCount: list?.value?.length,
-                                    itemBuilder: (context, index) {
-                                      return Card(
-                                        color: Colors.white,
-                                        child: Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.all(10),
-                                              child: Image.network(
-                                                  (list!.value![index]
-                                                              .entityimage ==
-                                                          null)
-                                                      ? 'https://via.placeholder.com/150'
-                                                      : list!.value![index]
-                                                          .entityimage
-                                                          .toString(),
-                                                  fit: BoxFit.fitWidth),
-                                            ),
-                                            Column(
+
+                            if ((list?.value?.length)! > 0) {
+                              return (viewoption == 0)
+                                  ? ListView.builder(
+                                      itemCount: list?.value?.length,
+                                      itemBuilder: (context, index) {
+                                        return Card(
+                                          color: Colors.white,
+                                          child: Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: Image.network(
+                                                    (list!.value![index]
+                                                                .entityimage ==
+                                                            null)
+                                                        ? 'https://via.placeholder.com/150'
+                                                        : list!.value![index]
+                                                            .entityimage
+                                                            .toString(),
+                                                    fit: BoxFit.fitWidth),
+                                              ),
+                                              Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        child: Text(
+                                                            list!.value![index]
+                                                                .name
+                                                                .toString(),
+                                                            style: const TextStyle(
+                                                                fontSize: 18.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold))),
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                                list!
+                                                                    .value![
+                                                                        index]
+                                                                    .accountnumber
+                                                                    .toString(),
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        18.0)),
+                                                            Text(' '),
+                                                            Text(
+                                                                list!
+                                                                    .value![
+                                                                        index]
+                                                                    .address1Stateorprovince
+                                                                    .toString(),
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        18.0))
+                                                          ],
+                                                        )),
+                                                  ])
+                                            ],
+                                          ),
+                                        );
+                                      })
+                                  : GridView.builder(
+                                      itemCount: list?.value?.length,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio:
+                                            MediaQuery.of(context).size.width /
+                                                (MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    1.4),
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        return Card(
+                                            color: Colors.white,
+                                            child: Column(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                    MainAxisAlignment.center,
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.center,
                                                 children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: Image.network(
+                                                        (list!.value![index]
+                                                                    .entityimage ==
+                                                                null)
+                                                            ? 'https://via.placeholder.com/150'
+                                                            : list!
+                                                                .value![index]
+                                                                .entityimage
+                                                                .toString(),
+                                                        fit: BoxFit.fitWidth),
+                                                  ),
                                                   Padding(
                                                       padding:
                                                           const EdgeInsets.all(
@@ -254,73 +436,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                                               const TextStyle(
                                                                   fontSize:
                                                                       18.0))),
-                                                ])
-                                          ],
-                                        ),
-                                      );
-                                    })
-                                : GridView.builder(
-                                    itemCount: list?.value?.length,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: MediaQuery.of(context)
-                                              .size
-                                              .width /
-                                          (MediaQuery.of(context).size.height /
-                                              1.4),
-                                    ),
-                                    itemBuilder: (context, index) {
-                                      return Card(
-                                          color: Colors.white,
-                                          child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  child: Image.network(
-                                                      (list!.value![index]
-                                                                  .entityimage ==
-                                                              null)
-                                                          ? 'https://via.placeholder.com/150'
-                                                          : list!.value![index]
-                                                              .entityimage
-                                                              .toString(),
-                                                      fit: BoxFit.fitWidth),
-                                                ),
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    child: Text(
-                                                        list!.value![index].name
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                            fontSize: 18.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold))),
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    child: Text(
-                                                        list!.value![index]
-                                                            .accountnumber
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                            fontSize: 18.0))),
-                                              ]));
-                                    });
-
+                                                ]));
+                                      });
+                            } // Display message if the list is empty
+                            else {
+                              return const Padding(
+                                padding: EdgeInsets.all(40),
+                                child: Text("No record found."),
+                              );
+                            }
                             ;
-                          } // Display empty container if the list is empty
+                          } // Display message if the list is empty
                           else
-                            return Container(
+                            return Padding(
+                              padding: EdgeInsets.all(40),
                               child: Text("No record found."),
                             );
                         }
