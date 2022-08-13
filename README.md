@@ -15,7 +15,7 @@ This project enables the user search and filter data from Office365 dataverse. T
 App requests dataverse 'Accounts' table with the following columns only 'accountid,name,accountnumber,statecode,address1_stateorprovince,entityimage'.
 
 ## Search and Filtering
-Dataverse APIs provides easy to use url parameters for ssearch and filter purposes. Search and filter params build on runtime according user selections. Endpoint url string is dynamically changes with filter values.
+Dataverse APIs provides easy to use url parameters for search and filter purposes. Search and filtering parameters are created at runtime according to user selections. Endpoint url string is dynamically changes with filter values.
 
 
 ## Limitations & Risks
