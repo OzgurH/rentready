@@ -52,7 +52,7 @@ Go to http://localhost:46243/ on local browser.
 
 
 
-## Dockerizing
+## Docker Container
 
 ```
 https://github.com/Microsoft/vscode-dev-containers
