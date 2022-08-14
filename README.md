@@ -32,7 +32,7 @@ Dataverse API token is desgined as providing from backend, because of Microsoft 
 
 ## Tests
 
-Unit & Widget tests can be found at ~/tests/
+Unit & Widget tests can be found at ~/tests/.
 Run test with this terminal command : 
 ```
 flutter test
