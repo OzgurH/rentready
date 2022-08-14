@@ -54,6 +54,7 @@ Go to http://localhost:46243/ on local browser.
 
 ## Docker Container
 
+Microsoft's Dart container is used for starting point:
 ```
 https://github.com/Microsoft/vscode-dev-containers
 ```
