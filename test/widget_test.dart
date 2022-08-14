@@ -7,24 +7,42 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+//import 'package:nock/nock.dart';
 
 import 'package:rentready/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  // setUpAll(nock.init);
+
+  // setUp(() {
+  //   nock.cleanAll();
+  // });
+  testWidgets('Data visible on screen smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    final Finder searchtextfield = find.byKey(
+      const Key(
+        'searchtextfield',
+      ),
+    );
+    expect(searchtextfield, findsOneWidget);
+
+    final filterbutton = find.byKey(const Key('filterbutton'));
+    expect(filterbutton, findsOneWidget);
+
+    final view1button = find.byKey(const Key('view1button'));
+    expect(view1button, findsOneWidget);
+
+    final view2button = find.byKey(const Key('view2button'));
+    expect(view2button, findsOneWidget);
+
+    // Tap the 'view' icon and trigger a frame.
+    await tester.tap(find.byKey(const Key('filterbutton')));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that filter screen.
+    expect(find.text('State or Province'), findsOneWidget);
   });
 }

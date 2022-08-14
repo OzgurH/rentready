@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Dataverse',
       theme: ThemeData(
-        scaffoldBackgroundColor: Color.fromARGB(255, 219, 219, 219),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 219, 219, 219),
         primaryColor: Colors.black,
         // This is the theme of your application.
         //
@@ -85,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(
                       flex: 4, // 40%
                       child: TextField(
+                        key: const Key('searchtextfield'),
                         onChanged: (value) {},
                         onSubmitted: (value) {
                           setState(() {
@@ -102,6 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(
                       flex: 3, // 30%
                       child: ElevatedButton.icon(
+                        key: const Key('filterbutton'),
                         onPressed: () {
                           showModalBottomSheet<void>(
                               context: context,
@@ -112,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   return Container(
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.35,
+                                              0.45,
                                       color: Colors.white,
                                       child: Center(
                                           child: Padding(
@@ -122,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               MainAxisAlignment.center,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            Text('State or Province'),
+                                            const Text('State or Province'),
                                             DropdownButton(
                                               // Initial Value
                                               value: filter1value,
@@ -147,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 });
                                               },
                                             ),
-                                            Text('State Code'),
+                                            const Text('State Code'),
                                             DropdownButton(
                                               // Initial Value
                                               value: filter2value,
@@ -186,12 +188,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           onPrimary:
                                                               Colors.white,
                                                           elevation: 1,
-                                                          primary:
-                                                              Color.fromARGB(
-                                                                  0,
-                                                                  255,
-                                                                  255,
-                                                                  255),
+                                                          primary: const Color
+                                                                  .fromARGB(
+                                                              0, 255, 255, 255),
                                                           side:
                                                               const BorderSide(
                                                             width: 0,
@@ -243,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: ElevatedButton.styleFrom(
                           onPrimary: Colors.black,
                           elevation: 1,
-                          primary: Color.fromARGB(0, 0, 0, 0),
+                          primary: const Color.fromARGB(0, 0, 0, 0),
                           shadowColor: Colors.transparent.withOpacity(0),
                           side: const BorderSide(
                             width: 0,
@@ -257,6 +256,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Row(
                         children: [
                           IconButton(
+                            key: const Key('view1button'),
                             icon: const Icon(
                               Icons.view_list,
                             ),
@@ -269,6 +269,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                           ),
                           IconButton(
+                            key: const Key('view2button'),
                             icon: const Icon(
                               Icons.view_comfy_alt,
                             ),
@@ -303,6 +304,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             if ((list?.value?.length)! > 0) {
                               return (viewoption == 0)
                                   ? ListView.builder(
+                                      key: const Key('post-list'),
                                       itemCount: list?.value?.length,
                                       itemBuilder: (context, index) {
                                         return Card(
@@ -361,7 +363,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                         18.0)),
                                                             const Text(' / '),
                                                             Text(
-                                                                list!
+                                                                list
                                                                     .value![
                                                                         index]
                                                                     .address1Stateorprovince

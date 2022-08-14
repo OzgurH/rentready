@@ -9,16 +9,16 @@ class AccountData {
     if (json['value'] != null) {
       value = <Value>[];
       json['value'].forEach((v) {
-        value!.add( Value.fromJson(v));
+        value!.add(Value.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
-    data['@odata.context'] = this.odataContext;
-    if (this.value != null) {
-      data['value'] = this.value!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['@odata.context'] = odataContext;
+    if (value != null) {
+      data['value'] = value!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -56,15 +56,15 @@ class Value {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['@odata.etag'] = this.odataEtag;
-    data['accountid'] = this.accountid;
-    data['name'] = this.name;
-    data['accountnumber'] = this.accountnumber;
-    data['statecode'] = this.statecode;
-    data['address1_stateorprovince'] = this.address1Stateorprovince;
-    data['entityimage'] = this.entityimage;
-    data['address1_composite'] = this.address1Composite;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['@odata.etag'] = odataEtag;
+    data['accountid'] = accountid;
+    data['name'] = name;
+    data['accountnumber'] = accountnumber;
+    data['statecode'] = statecode;
+    data['address1_stateorprovince'] = address1Stateorprovince;
+    data['entityimage'] = entityimage;
+    data['address1_composite'] = address1Composite;
     return data;
   }
 }
