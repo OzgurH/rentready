@@ -45,3 +45,8 @@ Run project with this terminal command :
 flutter run
 ```
 
+## Dockerizing
+
+https://github.com/Microsoft/vscode-dev-containers
+
+
