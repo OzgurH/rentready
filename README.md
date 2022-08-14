@@ -4,10 +4,10 @@ This project enables the user search and filter data from Office365 dataverse. T
 
 ## Source Code Files & Folders
 
-* Main : ~/lib/main.dart
 * Data Layer : ~/lib/data/dataverse.dart
-* UI Screens : ~/lib/widget/ui/searchscreen.dart
-* Widgets : ~/lib/ui/widgets.dart
+* API getter : ~/lib/data/service.dart
+* UI Screens : ~/lib/main.dart
+* Unit Tests : ~/tests/unit_test.dart
 * Widget tests : ~/tests/widget_test.dart
 
 ## Data Layer
@@ -30,6 +30,18 @@ This assignment has some limitations and risks that need to be taken care of in 
 
 Dataverse API token is desgined as providing from backend, because of Microsoft Authentication Library (MSAL) support in flutter only possible with 3rd party components which isnt stable and it requires extra effort. Using client certificate is conceivable for authentication but it requires updating app regularly in the app market places when certificate is expired. I primarily focused the requirements on the assignment.
 
+## Tests
 
+Unit & Widget tests can be found at ~/tests/
+Run test with this terminal command : 
+```
+flutter test
+```
 
-... to be continued...
+## Debug
+
+Run project with this terminal command : 
+```
+flutter run
+```
+
