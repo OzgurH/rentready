@@ -48,7 +48,7 @@ In dockerized envoirment :
 ```
 flutter run -d web-server
 ```
-Go to http://localhost:46243/ on local browser.
+ 
 
 
 
