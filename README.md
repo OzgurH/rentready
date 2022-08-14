@@ -40,13 +40,27 @@ flutter test
 
 ## Debug
 
-Run project with this terminal command : 
+If you are on standart nvoirment (non-docker) Run project with this terminal command : 
 ```
 flutter run
 ```
+In dockerized envoirment :
+```
+flutter run -d web-server
+```
+Go to http://localhost:46243/ on local browser.
+
+
 
 ## Dockerizing
 
+```
 https://github.com/Microsoft/vscode-dev-containers
+```
+
+* Github extension used for enabling transfers of large files
+* Only web build can run in Debian 
+* Installed Linux releases of Flutter , chromium and anroid SDK for arm64 (Mac M1 processor)
+* Install scripts and env variables set on dockerfile but not tested.
 
 
